@@ -7,6 +7,7 @@
 	const i18n: Writable<i18nType> = getContext('i18n');
 
 	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
 	import { page } from '$app/stores';
 
 	import { get, type Unsubscriber, type Writable } from 'svelte/store';
@@ -2113,7 +2114,7 @@
 		await showArtifacts.set(false);
 
 		if (!embedded && $page.url.pathname.includes('/c/')) {
-			window.history.replaceState(history.state, '', `/`);
+			window.history.replaceState(history.state, '', `${base}/`);
 		}
 
 		autoScroll = true;
@@ -3661,7 +3662,7 @@
 					});
 					await chatId.set(res.chat_id);
 					if (!$temporaryChatEnabled && !embedded) {
-						window.history.replaceState(history.state, '', `/c/${res.chat_id}`);
+						window.history.replaceState(history.state, '', `${base}/c/${res.chat_id}`);
 						await refreshChatList(localStorage.token);
 
 						// Persist chat-level params (system prompt, advanced
@@ -3947,7 +3948,7 @@
 			await chatId.set(_chatId);
 
 			if (!embedded) {
-				window.history.replaceState(history.state, '', `/c/${_chatId}`);
+				window.history.replaceState(history.state, '', `${base}/c/${_chatId}`);
 			}
 
 			await tick();
@@ -4318,7 +4319,7 @@
 							}}
 							{history}
 							title={$chatTitle}
-							shareEnabled={!!history.currentId}
+							shareEnabled={!!history.currentId && $user?.auth_type !== 'local'}
 							{initNewChat}
 							scrollToTop={!isNearTop ? scrollToTop : null}
 							{archiveChatHandler}

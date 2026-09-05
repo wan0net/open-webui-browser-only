@@ -71,6 +71,7 @@
 		removeAllDetails
 	} from '$lib/utils';
 	import { setTextScale } from '$lib/utils/text-scale';
+	import { installVirtualBackend, isVirtualBackend, virtualSocket } from '$lib/virtual-backend';
 
 	import NotificationToast from '$lib/components/NotificationToast.svelte';
 	import AppSidebar from '$lib/components/app/AppSidebar.svelte';
@@ -80,6 +81,8 @@
 	import { getUserSettings } from '$lib/apis/users';
 	import dayjs from 'dayjs';
 	import { getChannels } from '$lib/apis/channels';
+
+	installVirtualBackend();
 
 	const unregisterServiceWorkers = async () => {
 		if ('serviceWorker' in navigator) {
@@ -163,6 +166,12 @@
 	};
 
 	const setupSocket = async (enableWebsocket) => {
+		if (isVirtualBackend) {
+			await socket.set(/** @type {any} */ (virtualSocket));
+			await socketConnected.set(true);
+			return;
+		}
+
 		const _socket = io(`${WEBUI_BASE_URL}` || undefined, {
 			reconnection: true,
 			reconnectionDelay: 1000,

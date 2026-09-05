@@ -132,7 +132,8 @@
 					>
 						<div class="self-center shrink-0 size-4.5 flex items-center justify-center">
 							<img
-								src={`${WEBUI_API_BASE_URL}/users/${$user.id}/profile/image`}
+								src={$user.profile_image_url ??
+									`${WEBUI_API_BASE_URL}/users/${$user.id}/profile/image`}
 								alt=""
 								class="size-4.5 rounded-full object-cover"
 							/>
@@ -566,22 +567,24 @@
 				<div class=" self-center truncate">{$i18n.t('Settings')}</div>
 			</button>
 
-			<button
-				class="flex h-[1.6875rem] items-center gap-2 rounded-xl px-2 text-[0.8125rem] w-full hover:bg-gray-100 dark:hover:bg-gray-900 transition cursor-pointer select-none"
-				type="button"
-				on:click={async () => {
-					const res = await userSignOut();
-					localStorage.removeItem('token');
+			{#if $user?.auth_type !== 'local'}
+				<button
+					class="flex h-[1.6875rem] items-center gap-2 rounded-xl px-2 text-[0.8125rem] w-full hover:bg-gray-100 dark:hover:bg-gray-900 transition cursor-pointer select-none"
+					type="button"
+					on:click={async () => {
+						const res = await userSignOut();
+						localStorage.removeItem('token');
 
-					location.href = getLogoutRedirectUrl(res?.redirect_url);
-					show = false;
-				}}
-			>
-				<div class="self-center">
-					<LogOutIcon className="size-3.5" strokeWidth="1.5" />
-				</div>
-				<div class=" self-center truncate">{$i18n.t('Sign Out')}</div>
-			</button>
+						location.href = getLogoutRedirectUrl(res?.redirect_url);
+						show = false;
+					}}
+				>
+					<div class="self-center">
+						<LogOutIcon className="size-3.5" strokeWidth="1.5" />
+					</div>
+					<div class=" self-center truncate">{$i18n.t('Sign Out')}</div>
+				</button>
+			{/if}
 		</DropdownMenu>
 	</div>
 </Dropdown>

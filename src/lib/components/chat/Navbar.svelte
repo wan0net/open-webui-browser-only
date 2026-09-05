@@ -123,7 +123,7 @@
 								{title || chat?.chat?.title || $i18n.t('New Chat')}
 							</div>
 
-							{#if shareEnabled && chat && (chat.id || $temporaryChatEnabled)}
+							{#if chat && (chat.id || $temporaryChatEnabled)}
 								<Menu
 									{chat}
 									{shareEnabled}

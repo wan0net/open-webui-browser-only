@@ -1102,7 +1102,7 @@
 							<DatabaseSettings className="size-3.5" strokeWidth="2" />
 							<span>{$i18n.t('Data Controls')}</span>
 						</button>
-					{:else if tabId === 'usage'}
+					{:else if tabId === 'usage' && $user?.auth_type !== 'local'}
 						<button
 							role="tab"
 							aria-controls="tab-usage"
@@ -1128,7 +1128,7 @@
 							<ArchiveBox className="size-3.5" strokeWidth="2" />
 							<span>{$i18n.t('Archived Chats')}</span>
 						</button>
-					{:else if tabId === 'account'}
+					{:else if tabId === 'account' && $user?.auth_type !== 'local'}
 						<button
 							role="tab"
 							aria-controls="tab-account"

@@ -1,3 +1,24 @@
+# Open WebUI Browser-Only — very early alpha test case
+
+> [!CAUTION]
+> This is a **very early alpha test case**, not a production release. It is an experimental
+> browser-only fork of Open WebUI 0.11.3. Chats, settings, and provider credentials remain in
+> the browser, and API keys may be accessible to anyone who controls the browser profile or can
+> run script on the site's origin. Use only narrowly scoped, revocable test credentials.
+
+This fork replaces Open WebUI's required FastAPI, authentication, and websocket services with a
+small browser-side virtual API. It uses one implicit local user, stores personal data in
+IndexedDB/local storage, and sends chat requests directly to an OpenAI-compatible endpoint using
+Open WebUI's Direct Connections path. Backend-only features are deliberately disabled.
+
+See [BROWSER_ONLY.md](./BROWSER_ONLY.md) for supported features, disabled functionality, local
+setup, GitHub Pages deployment, limitations, and the upstream-update process.
+
+This project retains Open WebUI's upstream history and licence. It is an experimental community
+fork and is not an official Open WebUI release.
+
+## Upstream Open WebUI README
+
 # Open WebUI 👋
 
 ![GitHub stars](https://img.shields.io/github/stars/open-webui/open-webui?style=social)

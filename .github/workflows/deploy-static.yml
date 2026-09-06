@@ -31,6 +31,7 @@ jobs:
         run: npm run build:static
         env:
           BASE_PATH: /${{ github.event.repository.name }}
+          NODE_OPTIONS: --max-old-space-size=8192
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

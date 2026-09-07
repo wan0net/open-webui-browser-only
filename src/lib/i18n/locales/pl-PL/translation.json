@@ -616,6 +616,7 @@
 	"Connect to an AI provider to start chatting": "Połącz się z dostawcą AI, aby rozpocząć czat",
 	"Connect to Open Terminal instances to browse files and use them as always-on tools. Only one can be active at a time.": "Połącz się z instancjami Open Terminal, aby przeglądać pliki i używać ich jako stale dostępnych narzędzi. Tylko jedna instancja może być aktywna jednocześnie.",
 	"Connect to Open Terminal instances. Admins and users granted access can use file browsing and terminal tools through these servers.": "Połącz się z instancjami Open Terminal. Administratorzy i użytkownicy z nadanym dostępem mogą korzystać z tych serwerów do przeglądania plików i pracy z terminalem.",
+	"Connect to OpenAPI or remote MCP (Streamable HTTP) tool servers.": "",
 	"Connect to the ComfyUI server used for generation.": "Połącz się z serwerem ComfyUI używanym do generowania.",
 	"Connect to the ComfyUI server used for image edits.": "Połącz się z serwerem ComfyUI używanym do edycji obrazów.",
 	"Connect to your own OpenAI compatible API endpoints.": "Połącz z własnymi punktami końcowymi API zgodnymi z OpenAI.",

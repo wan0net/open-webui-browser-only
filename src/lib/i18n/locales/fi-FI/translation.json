@@ -600,6 +600,7 @@
 	"Connect to an AI provider to start chatting": "Yhdistä tekoälypalveluntarjoajaan aloittaaksesi keskustelut",
 	"Connect to Open Terminal instances to browse files and use them as always-on tools. Only one can be active at a time.": "Yhdistä Open Terminal -instansseihin selataksesi tiedostoja ja käyttääksesi niitä aina päällä olevina työkaluina. Vain yksi voi olla aktiivinen kerrallaan.",
 	"Connect to Open Terminal instances. Admins and users granted access can use file browsing and terminal tools through these servers.": "",
+	"Connect to OpenAPI or remote MCP (Streamable HTTP) tool servers.": "",
 	"Connect to the ComfyUI server used for generation.": "Yhdistä generointia varten käytettyyn ComfyUI-palvelimeen.",
 	"Connect to the ComfyUI server used for image edits.": "Yhdistä kuvanmuokkauksiin käytettyyn ComfyUI-palvelimeen.",
 	"Connect to your own OpenAI compatible API endpoints.": "Yhdistä omat OpenAI yhteensopivat API päätepisteet.",

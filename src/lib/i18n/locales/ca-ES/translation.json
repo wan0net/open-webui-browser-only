@@ -608,6 +608,7 @@
 	"Connect to an AI provider to start chatting": "Connectar a un proveidor d'IA per començar a xerrar",
 	"Connect to Open Terminal instances to browse files and use them as always-on tools. Only one can be active at a time.": "Connecta't a instàncies d'Open Terminal per navegar per fitxers i utilitzar-los com a eines sempre actives. Només una pot estar activa alhora.",
 	"Connect to Open Terminal instances. Admins and users granted access can use file browsing and terminal tools through these servers.": "Connecteu-vos a les instàncies del terminal obert. Els administradors i usuaris als quals se'ls concedeix accés poden utilitzar eines de navegació de fitxers i terminals a través d'aquests servidors.",
+	"Connect to OpenAPI or remote MCP (Streamable HTTP) tool servers.": "",
 	"Connect to the ComfyUI server used for generation.": "Connecteu-vos al servidor ComfyUI utilitzat per a la generació.",
 	"Connect to the ComfyUI server used for image edits.": "Connecteu-vos al servidor ComfyUI utilitzat per editar imatges.",
 	"Connect to your own OpenAI compatible API endpoints.": "Connecta als teus propis punts de connexió de l'API compatible amb OpenAI",

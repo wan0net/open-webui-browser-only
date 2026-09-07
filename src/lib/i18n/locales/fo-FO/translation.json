@@ -600,6 +600,7 @@
 	"Connect to an AI provider to start chatting": "Sambind við ein vitlíkisveitara fyri at byrja at kjatta",
 	"Connect to Open Terminal instances to browse files and use them as always-on tools. Only one can be active at a time.": "Sambind við Open Terminal-eindir fyri at kaga í fílur og brúka tær sum amboð, ið altíð eru tøk. Bara ein kann vera virkin í senn.",
 	"Connect to Open Terminal instances. Admins and users granted access can use file browsing and terminal tools through these servers.": "Sambind við Open Terminal-eindir. Fyrisitarar og brúkarar við atgongd kunnu kaga í fílur og brúka terminalamboð gjøgnum hesar tænastur.",
+	"Connect to OpenAPI or remote MCP (Streamable HTTP) tool servers.": "",
 	"Connect to the ComfyUI server used for generation.": "Sambind við ComfyUI-tænastuna, sum verður brúkt til gerð.",
 	"Connect to the ComfyUI server used for image edits.": "Sambind við ComfyUI-tænastuna, sum verður brúkt til myndaredigering.",
 	"Connect to your own OpenAI compatible API endpoints.": "Sambind við tíni egnu OpenAI-sambæriligu API-endapunkt.",

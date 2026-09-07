@@ -600,6 +600,7 @@
 	"Connect to an AI provider to start chatting": "连接 AI 服务后即可开始对话",
 	"Connect to Open Terminal instances to browse files and use them as always-on tools. Only one can be active at a time.": "连接到 Open Terminal 实例后，可随时浏览文件并作为常驻工具使用，但同一时间只能连接一个。",
 	"Connect to Open Terminal instances. Admins and users granted access can use file browsing and terminal tools through these servers.": "连接到 Open Terminal 实例。管理员和获得授权的用户可以通过这些服务器使用文件浏览和终端工具。",
+	"Connect to OpenAPI or remote MCP (Streamable HTTP) tool servers.": "",
 	"Connect to the ComfyUI server used for generation.": "连接到用于生成的 ComfyUI 服务器。",
 	"Connect to the ComfyUI server used for image edits.": "连接到用于图片编辑的 ComfyUI 服务器。",
 	"Connect to your own OpenAI compatible API endpoints.": "连接到符合 OpenAI 接口格式的接口",

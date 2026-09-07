@@ -600,6 +600,7 @@
 	"Connect to an AI provider to start chatting": "Csatlakozz egy AI-szolgáltatóhoz a beszélgetés megkezdéséhez",
 	"Connect to Open Terminal instances to browse files and use them as always-on tools. Only one can be active at a time.": "Csatlakozz Open Terminal-példányokhoz fájlok böngészéséhez és állandóan elérhető eszközként való használatukhoz. Egyszerre csak egy lehet aktív.",
 	"Connect to Open Terminal instances. Admins and users granted access can use file browsing and terminal tools through these servers.": "Csatlakozz Open Terminal-példányokhoz. Az adminisztrátorok és a hozzáféréssel rendelkező felhasználók ezeken a szervereken keresztül használhatják a fájlböngészést és a termináleszközöket.",
+	"Connect to OpenAPI or remote MCP (Streamable HTTP) tool servers.": "",
 	"Connect to the ComfyUI server used for generation.": "Csatlakozás a generáláshoz használt ComfyUI-szerverhez.",
 	"Connect to the ComfyUI server used for image edits.": "Csatlakozás a képszerkesztéshez használt ComfyUI-szerverhez.",
 	"Connect to your own OpenAI compatible API endpoints.": "Csatlakozz saját OpenAI kompatibilis API végpontjaidhoz.",

@@ -8,8 +8,8 @@ This fork runs the Open WebUI frontend as a static site. It has no FastAPI proce
 - Direct OpenAI-compatible connections, including providers that expose Bedrock models through an OpenAI-compatible gateway.
 - Provider model discovery through `GET /models`, or a manually configured model list.
 - Streaming chat completions through the existing Open WebUI Direct Connections implementation.
-- Browser-executed OpenAPI tools and remote MCP tools over Streamable HTTP.
-- Per-call tool confirmation by default, with an explicit full-control option in the chat tool menu.
+- Browser-executed OpenAPI tools, remote MCP tools over Streamable HTTP, and a limited browser-native MCP package runtime.
+- Per-call tool confirmation by default, with an explicit **Full access** option in the chat tool menu.
 - Chats, chat titles, folders, tags, pinned chats, archives, search, settings, connection details, and favourites saved by chat updates.
 - Static production builds and GitHub Pages deployment.
 
@@ -32,9 +32,17 @@ Open the site, choose **Settings → Connections → Add Connection**, then ente
 
 Choose **Settings → Integrations → Add Connection** and select either **OpenAPI** or **MCP Streamable HTTP**. OpenAPI connections may load `openapi.json` from the server or use a pasted specification. MCP connections currently support no authentication or a bearer token. Enable the server from the Integrations button beside the chat input.
 
-The selected OpenAI-compatible model must implement native `tools` / `tool_calls` chat-completion fields. Tool-enabled turns use non-streaming provider calls while the browser completes the tool loop; ordinary turns continue to stream. The browser asks before every call unless **Full Control** is explicitly selected. Tool loops stop after six rounds, and individual results are truncated at 100,000 characters.
+The selected OpenAI-compatible model must implement native `tools` / `tool_calls` chat-completion fields. Tool-enabled turns use non-streaming provider calls while the browser completes the tool loop; ordinary turns continue to stream. The browser asks before every call unless **Full access** is explicitly selected. Tool loops stop after six rounds, and individual results are truncated at 100,000 characters.
 
 Tool servers must permit requests from the static site's origin. Remote MCP servers must also allow the `MCP-Protocol-Version` and `Mcp-Session-Id` request headers and expose the `Mcp-Session-Id` response header through CORS. HTTPS pages can only call HTTPS tool servers under normal browser mixed-content rules.
+
+### Browser MCP packages
+
+Choose **Settings → Integrations → Add browser package** to paste a package name or a common `npx` / `npm exec` command. The app asks an ESM registry/bundler (by default `https://esm.sh`) for a browser build, caches the complete module graph and its SHA-256 integrity hashes in IndexedDB, then loads it from local Blob URLs in an isolated Worker. Normal executable-only MCP packages are also retried at their common `dist/index.js` entry point.
+
+The Worker supplies a narrow `process.stdin`, `process.stdout`, `process.stderr`, `process.env`, `process.argv`, and `process.nextTick` compatibility surface. Open WebUI then speaks MCP JSON-RPC over that simulated stdio channel. Package arguments and optional environment values can be entered in the advanced settings and remain browser-local. Pin a version in the package name, for example `example-mcp@1.2.3`, for reproducible installs.
+
+This is the experimental LLMChef-style shim, not an embedded copy of Node.js. It is suitable only for browser-bundleable, pure JavaScript servers. Network APIs and child workers are disabled inside the Worker. Native modules, subprocesses, Docker, real operating-system files, raw sockets, Node-only built-ins, and packages with unsupported circular module graphs will fail visibly. A package is downloaded only on its first install for that package/entry URL; clear the site's stored data to force a fresh unversioned package download.
 
 ## GitHub Pages
 
@@ -50,7 +58,7 @@ These require a trusted shared server and are disabled in the capability respons
 - shared/public chats, channels, calendars, automations, and community sync;
 - server workspaces, models, prompts, tools, functions, and knowledge bases;
 - server file ingestion/RAG, web search, image generation, memories, analytics, and admin settings;
-- server-managed tool execution and terminal servers (browser OpenAPI and remote HTTP MCP tools are available);
+- server-managed tool execution and terminal servers (browser OpenAPI, remote HTTP MCP, and compatible browser MCP packages are available);
 - cross-device sync, multi-user collaboration, and server-side background tasks.
 
 Browser-native display features such as Markdown, diagrams, code formatting, local audio controls, and the retained Pyodide code path remain available where they do not depend on a disabled server API.
@@ -62,7 +70,7 @@ Browser-native display features such as Markdown, diagrams, code formatting, loc
 - Private browsing and managed-browser policies may restrict or erase IndexedDB/local storage.
 - Direct providers must permit browser requests (CORS) and streaming responses.
 - OpenAI-compatible gateways vary. Basic chat-completions streaming is covered; provider-specific server plugins and Open WebUI backend filters are not.
-- Browser MCP is an early subset: Streamable HTTP with JSON or SSE responses works, but OAuth, server-initiated notifications, resumable streams, elicitation, sampling, and `stdio` transports are unavailable.
+- Browser MCP is an early subset: Streamable HTTP with JSON or SSE responses works, plus compatible JavaScript packages can use the isolated Worker stdio shim. OAuth, server-initiated notifications, resumable streams, elicitation, sampling, real local processes, and arbitrary Node stdio servers remain unavailable.
 - Tool connections and bearer tokens are browser data, subject to the same origin/profile risks as model API keys. Prefer narrowly scoped, revocable credentials and read-only tools where possible.
 - Tool-call rendering is currently limited to the final assistant answer; the approval prompt and result loop work, but Open WebUI's richer server-side tool progress cards are not reproduced yet.
 

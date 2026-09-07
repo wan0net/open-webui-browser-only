@@ -1,6 +1,10 @@
 import { WEBUI_BASE_URL } from '$lib/constants';
 import { convertOpenApiToToolPayload } from '$lib/utils';
 import { discoverMcpServer, executeMcpTool } from '$lib/virtual-backend/mcp';
+import {
+	discoverMcpPackageServer,
+	executeMcpPackageTool
+} from '$lib/virtual-backend/mcp-package-runtime';
 import { normalizeTags } from '$lib/utils/tags';
 import { getOpenAIModelsDirect } from './openai';
 
@@ -443,6 +447,18 @@ export const getToolServersData = async (servers: object[]) => {
 				.map(async (server) => {
 					let error = null;
 
+					if (server?.type === 'mcp_package') {
+						try {
+							return await discoverMcpPackageServer(server as any);
+						} catch (err: any) {
+							return {
+								error: err?.message ?? String(err),
+								url: server?.url,
+								type: 'mcp_package'
+							};
+						}
+					}
+
 					if (server?.type === 'mcp') {
 						try {
 							return await discoverMcpServer(server);
@@ -558,6 +574,10 @@ export const executeToolServer = async (
 	let error = null;
 
 	try {
+		if ((serverData as any)?.type === 'mcp_package') {
+			return [await executeMcpPackageTool(serverData, name, params), null];
+		}
+
 		if ((serverData as any)?.type === 'mcp') {
 			return [await executeMcpTool(serverData, name, params), null];
 		}

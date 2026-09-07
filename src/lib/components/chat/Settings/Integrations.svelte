@@ -17,6 +17,7 @@
 	import UserSettingSection from './UserSettingSection.svelte';
 
 	import AddToolServerModal from '$lib/components/AddToolServerModal.svelte';
+	import BrowserMcpPackageModal from '$lib/components/BrowserMcpPackageModal.svelte';
 	import { isVirtualBackend } from '$lib/virtual-backend';
 
 	type TerminalServerConfig = {
@@ -36,6 +37,7 @@
 	let servers: ToolServerConnection[] | null = null;
 	let terminalServerConfigs: TerminalServerConfig[] = [];
 	let showConnectionModal = false;
+	let showPackageModal = false;
 	const helpTextClass = 'text-[0.6875rem] text-gray-400 dark:text-gray-600';
 
 	const addConnectionHandler = async (server: ToolServerConnection) => {
@@ -53,7 +55,9 @@
 		toolServersData = toolServersData.filter((data: any) => {
 			if (data.error) {
 				toast.error(
-					$i18n.t(`Failed to connect to {{URL}} OpenAPI tool server`, { URL: data?.url })
+					data?.type === 'mcp_package'
+						? `Failed to start browser MCP package: ${data.error}`
+						: $i18n.t(`Failed to connect to {{URL}} OpenAPI tool server`, { URL: data?.url })
 				);
 				return false;
 			}
@@ -95,6 +99,7 @@
 </script>
 
 <AddToolServerModal bind:show={showConnectionModal} onSubmit={addConnectionHandler} direct />
+<BrowserMcpPackageModal bind:show={showPackageModal} onSubmit={addConnectionHandler} />
 
 <form
 	id="tab-tools"
@@ -109,21 +114,30 @@
 		{#if servers !== null}
 			<UserSettingSection title={$i18n.t('Tools')} first>
 				<div>
-					<div class="mb-2 flex items-center justify-between">
+					<div class="mb-2 flex items-center justify-between gap-2">
 						<div class="text-xs text-gray-600 dark:text-gray-400">
 							{$i18n.t('External Tool Servers')}
 						</div>
 
-						<Tooltip content={$i18n.t('Add Connection')}>
+						<div class="flex items-center gap-2">
 							<button
-								aria-label={$i18n.t('Add Connection')}
-								class="flex size-6 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-black/5 hover:text-gray-900 dark:text-gray-600 dark:hover:bg-white/5 dark:hover:text-white"
-								on:click={() => (showConnectionModal = true)}
+								class="text-[0.6875rem] text-gray-500 hover:underline"
 								type="button"
+								on:click={() => (showPackageModal = true)}
 							>
-								<Plus />
+								Add browser package
 							</button>
-						</Tooltip>
+							<Tooltip content={$i18n.t('Add Connection')}>
+								<button
+									aria-label={$i18n.t('Add Connection')}
+									class="flex size-6 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-black/5 hover:text-gray-900 dark:text-gray-600 dark:hover:bg-white/5 dark:hover:text-white"
+									on:click={() => (showConnectionModal = true)}
+									type="button"
+								>
+									<Plus />
+								</button>
+							</Tooltip>
+						</div>
 					</div>
 
 					<div class="flex flex-col gap-1">
@@ -147,7 +161,8 @@
 					{/if}
 
 					<div class="mt-1 {helpTextClass}">
-						{$i18n.t('Connect to OpenAPI or remote MCP (Streamable HTTP) tool servers.')}
+						{$i18n.t('Connect to OpenAPI or remote MCP (Streamable HTTP) tool servers.')} Browser-compatible
+						MCP packages can also run locally in an isolated Worker.
 					</div>
 					<div class={helpTextClass}>
 						<!-- LICENSE covers this Open WebUI wordmark.

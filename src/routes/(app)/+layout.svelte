@@ -119,9 +119,11 @@
 		toolServersData = toolServersData.filter((data) => {
 			if (!data || data.error) {
 				toast.error(
-					$i18n.t(`Failed to connect to {{URL}} OpenAPI tool server`, {
-						URL: data?.url
-					})
+					data?.type === 'mcp_package'
+						? `Failed to start browser MCP package: ${data.error}`
+						: $i18n.t(`Failed to connect to {{URL}} OpenAPI tool server`, {
+								URL: data?.url
+							})
 				);
 				return false;
 			}

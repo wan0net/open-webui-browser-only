@@ -28,6 +28,17 @@ export type LocalFolder = {
 	updated_at: number;
 };
 
+export type LocalMcpPackage = {
+	id: string;
+	package_name: string;
+	entry_url: string;
+	registry_url: string;
+	module_urls: string[];
+	module_hashes: Record<string, string>;
+	modules: Record<string, string>;
+	installed_at: number;
+};
+
 interface VirtualBackendSchema extends DBSchema {
 	chats: {
 		key: string;
@@ -39,33 +50,55 @@ interface VirtualBackendSchema extends DBSchema {
 		value: LocalFolder;
 		indexes: { 'by-updated': number };
 	};
+	mcpPackages: {
+		key: string;
+		value: LocalMcpPackage;
+	};
 }
 
-const database = openDB<VirtualBackendSchema>('open-webui-browser', 1, {
-	upgrade(db) {
-		const chats = db.createObjectStore('chats', { keyPath: 'id' });
-		chats.createIndex('by-updated', 'updated_at');
-		chats.createIndex('by-folder', 'folder_id');
+let database: ReturnType<typeof openDB<VirtualBackendSchema>> | null = null;
+const getDatabase = () => {
+	if (!database) {
+		database = openDB<VirtualBackendSchema>('open-webui-browser', 2, {
+			upgrade(db, oldVersion) {
+				if (oldVersion < 1) {
+					const chats = db.createObjectStore('chats', { keyPath: 'id' });
+					chats.createIndex('by-updated', 'updated_at');
+					chats.createIndex('by-folder', 'folder_id');
 
-		const folders = db.createObjectStore('folders', { keyPath: 'id' });
-		folders.createIndex('by-updated', 'updated_at');
+					const folders = db.createObjectStore('folders', { keyPath: 'id' });
+					folders.createIndex('by-updated', 'updated_at');
+				}
+				if (oldVersion < 2) {
+					db.createObjectStore('mcpPackages', { keyPath: 'id' });
+				}
+			}
+		});
 	}
-});
+	return database;
+};
 
 export const listChats = async () =>
-	(await database).getAllFromIndex('chats', 'by-updated').then((items) => items.reverse());
+	(await getDatabase()).getAllFromIndex('chats', 'by-updated').then((items) => items.reverse());
 
-export const getChat = async (id: string) => (await database).get('chats', id);
-export const putChat = async (chat: LocalChat) => (await database).put('chats', chat);
-export const deleteChat = async (id: string) => (await database).delete('chats', id);
-export const clearChats = async () => (await database).clear('chats');
+export const getChat = async (id: string) => (await getDatabase()).get('chats', id);
+export const putChat = async (chat: LocalChat) => (await getDatabase()).put('chats', chat);
+export const deleteChat = async (id: string) => (await getDatabase()).delete('chats', id);
+export const clearChats = async () => (await getDatabase()).clear('chats');
 
 export const listFolders = async () =>
-	(await database).getAllFromIndex('folders', 'by-updated').then((items) => items.reverse());
+	(await getDatabase()).getAllFromIndex('folders', 'by-updated').then((items) => items.reverse());
 
-export const getFolder = async (id: string) => (await database).get('folders', id);
-export const putFolder = async (folder: LocalFolder) => (await database).put('folders', folder);
-export const deleteFolder = async (id: string) => (await database).delete('folders', id);
+export const getFolder = async (id: string) => (await getDatabase()).get('folders', id);
+export const putFolder = async (folder: LocalFolder) =>
+	(await getDatabase()).put('folders', folder);
+export const deleteFolder = async (id: string) => (await getDatabase()).delete('folders', id);
+
+export const getMcpPackage = async (id: string) => (await getDatabase()).get('mcpPackages', id);
+export const putMcpPackage = async (value: LocalMcpPackage) =>
+	(await getDatabase()).put('mcpPackages', value);
+export const deleteMcpPackage = async (id: string) =>
+	(await getDatabase()).delete('mcpPackages', id);
 
 const SETTINGS_KEY = 'open-webui-browser-settings';
 const DEFAULT_SETTINGS = { ui: { params: { tool_approval_mode: 'ask' } } };

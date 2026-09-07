@@ -7,6 +7,8 @@
 	import SensitiveInput from '$lib/components/common/SensitiveInput.svelte';
 	import Cog6 from '$lib/components/icons/Cog6.svelte';
 	import AddToolServerModal from '$lib/components/AddToolServerModal.svelte';
+	import BrowserMcpPackageModal from '$lib/components/BrowserMcpPackageModal.svelte';
+	import { stopMcpPackageServer } from '$lib/virtual-backend/mcp-package-runtime';
 	import WrenchAlt from '$lib/components/icons/WrenchAlt.svelte';
 
 	export let onDelete = () => {};
@@ -18,20 +20,37 @@
 	let showConfigModal = false;
 </script>
 
-<AddToolServerModal
-	edit
-	{direct}
-	bind:show={showConfigModal}
-	{connection}
-	onDelete={() => {
-		onDelete();
-		showConfigModal = false;
-	}}
-	onSubmit={(c) => {
-		connection = c;
-		onSubmit(c);
-	}}
-/>
+{#if connection?.type === 'mcp_package'}
+	<BrowserMcpPackageModal
+		edit
+		bind:show={showConfigModal}
+		{connection}
+		onDelete={() => {
+			stopMcpPackageServer(connection.url);
+			onDelete();
+			showConfigModal = false;
+		}}
+		onSubmit={(c) => {
+			connection = c;
+			onSubmit(c);
+		}}
+	/>
+{:else}
+	<AddToolServerModal
+		edit
+		{direct}
+		bind:show={showConfigModal}
+		{connection}
+		onDelete={() => {
+			onDelete();
+			showConfigModal = false;
+		}}
+		onSubmit={(c) => {
+			connection = c;
+			onSubmit(c);
+		}}
+	/>
+{/if}
 
 <div class="flex w-full items-center gap-3 text-xs text-gray-600 dark:text-gray-400">
 	<Tooltip className="w-full relative" content={''} placement="top-start">
@@ -41,7 +60,13 @@
 					? 'opacity-50'
 					: ''}"
 			>
-				<Tooltip content={connection?.type === 'mcp' ? $i18n.t('MCP') : $i18n.t('OpenAPI')}>
+				<Tooltip
+					content={connection?.type === 'mcp_package'
+						? 'Browser MCP package'
+						: connection?.type === 'mcp'
+							? $i18n.t('MCP')
+							: $i18n.t('OpenAPI')}
+				>
 					<WrenchAlt />
 				</Tooltip>
 

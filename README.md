@@ -9,9 +9,9 @@
 This fork replaces Open WebUI's required FastAPI, authentication, and websocket services with a
 small browser-side virtual API. It uses one implicit local user, stores personal data in
 IndexedDB/local storage, and sends chat requests directly to an OpenAI-compatible endpoint using
-Open WebUI's Direct Connections path. Browser-executed OpenAPI tools and remote MCP servers over
-Streamable HTTP are available with confirmation enabled by default. Backend-only features are
-deliberately disabled.
+Open WebUI's Direct Connections path. Browser-executed OpenAPI tools, remote MCP servers over
+Streamable HTTP, and LLMChef-style browser-compatible MCP packages in an isolated Worker are
+available with confirmation enabled by default. Backend-only features are deliberately disabled.
 
 See [BROWSER_ONLY.md](./BROWSER_ONLY.md) for supported features, disabled functionality, local
 setup, GitHub Pages deployment, limitations, and the upstream-update process.

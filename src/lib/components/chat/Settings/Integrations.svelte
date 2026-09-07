@@ -17,6 +17,7 @@
 	import UserSettingSection from './UserSettingSection.svelte';
 
 	import AddToolServerModal from '$lib/components/AddToolServerModal.svelte';
+	import { isVirtualBackend } from '$lib/virtual-backend';
 
 	type TerminalServerConfig = {
 		url: string;
@@ -146,7 +147,7 @@
 					{/if}
 
 					<div class="mt-1 {helpTextClass}">
-						{$i18n.t('Connect to your own OpenAPI compatible external tool servers.')}
+						{$i18n.t('Connect to OpenAPI or remote MCP (Streamable HTTP) tool servers.')}
 					</div>
 					<div class={helpTextClass}>
 						<!-- LICENSE covers this Open WebUI wordmark.
@@ -164,20 +165,20 @@
 				</div>
 			</UserSettingSection>
 
-			<UserSettingSection title={$i18n.t('Terminal')}>
-				<Terminals bind:servers={terminalServerConfigs} onChange={() => updateHandler()} />
+			{#if !isVirtualBackend}<UserSettingSection title={$i18n.t('Terminal')}>
+					<Terminals bind:servers={terminalServerConfigs} onChange={() => updateHandler()} />
 
-				<div class="mt-1 {helpTextClass}">
-					{$i18n.t(
-						'Connect to Open Terminal instances to browse files and use them as always-on tools. Only one can be active at a time.'
-					)}
-				</div>
-				<a
-					class="mt-0.5 block text-[0.6875rem] text-gray-500 underline hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300"
-					href="https://github.com/open-webui/open-terminal"
-					target="_blank">{$i18n.t('Learn more about Open Terminal')} ↗</a
-				>
-			</UserSettingSection>
+					<div class="mt-1 {helpTextClass}">
+						{$i18n.t(
+							'Connect to Open Terminal instances to browse files and use them as always-on tools. Only one can be active at a time.'
+						)}
+					</div>
+					<a
+						class="mt-0.5 block text-[0.6875rem] text-gray-500 underline hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300"
+						href="https://github.com/open-webui/open-terminal"
+						target="_blank">{$i18n.t('Learn more about Open Terminal')} ↗</a
+					>
+				</UserSettingSection>{/if}
 		{:else}
 			<div class="flex h-full justify-center">
 				<div class="my-auto">

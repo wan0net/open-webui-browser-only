@@ -28,6 +28,7 @@
 	import XMark from '$lib/components/icons/XMark.svelte';
 	import Textarea from './common/Textarea.svelte';
 	import ConfirmDialog from '$lib/components/common/ConfirmDialog.svelte';
+	import { discoverMcpServer } from '$lib/virtual-backend/mcp';
 
 	export let onSubmit: Function = () => {};
 	export let onDelete: Function = () => {};
@@ -190,9 +191,20 @@
 		}
 
 		if (direct) {
-			const res = await getToolServerData(
-				auth_type === 'bearer' ? key : localStorage.token,
-				path.includes('://') ? path : `${url}${path.startsWith('/') ? '' : '/'}${path}`
+			const res = await (
+				type === 'mcp'
+					? discoverMcpServer({
+							type,
+							url,
+							auth_type,
+							key,
+							headers: headers ? JSON.parse(headers) : undefined,
+							info: { id, name, description }
+						})
+					: getToolServerData(
+							auth_type === 'bearer' ? key : localStorage.token,
+							path.includes('://') ? path : `${url}${path.startsWith('/') ? '' : '/'}${path}`
+						)
 			).catch((err) => {
 				toast.error($i18n.t('Connection failed'));
 			});
@@ -339,7 +351,7 @@
 			return;
 		}
 
-		if (type === 'mcp' && oauthAuthTypes.includes(auth_type) && !oauthClientInfo) {
+		if (!direct && type === 'mcp' && oauthAuthTypes.includes(auth_type) && !oauthClientInfo) {
 			toast.error($i18n.t('Please register the OAuth client'));
 			loading = false;
 			return;
@@ -544,26 +556,23 @@
 								<div class=" text-xs text-gray-500">{$i18n.t('Type')}</div>
 
 								<div class="">
-									{#if !direct}
-										<button
-											on:click={() => {
-												type = ['', 'openapi'].includes(type) ? 'mcp' : 'openapi';
-											}}
-											type="button"
-											class=" text-xs text-gray-700 dark:text-gray-300"
-										>
-											{#if ['', 'openapi'].includes(type)}
-												{$i18n.t('OpenAPI')}
-											{:else if type === 'mcp'}
-												{$i18n.t('MCP')}
-												<span class="text-gray-500">{$i18n.t('Streamable HTTP')}</span>
-											{/if}
-										</button>
-									{:else}
-										<div class="text-xs text-gray-700 dark:text-gray-300">
+									<button
+										on:click={() => {
+											type = ['', 'openapi'].includes(type) ? 'mcp' : 'openapi';
+											if (direct && type === 'mcp' && !['none', 'bearer'].includes(auth_type)) {
+												auth_type = 'bearer';
+											}
+										}}
+										type="button"
+										class=" text-xs text-gray-700 dark:text-gray-300"
+									>
+										{#if ['', 'openapi'].includes(type)}
 											{$i18n.t('OpenAPI')}
-										</div>
-									{/if}
+										{:else if type === 'mcp'}
+											{$i18n.t('MCP')}
+											<span class="text-gray-500">{$i18n.t('Streamable HTTP')}</span>
+										{/if}
+									</button>
 								</div>
 							</div>
 						</div>

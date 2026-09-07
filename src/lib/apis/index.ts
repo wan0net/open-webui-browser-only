@@ -1,5 +1,6 @@
 import { WEBUI_BASE_URL } from '$lib/constants';
 import { convertOpenApiToToolPayload } from '$lib/utils';
+import { discoverMcpServer, executeMcpTool } from '$lib/virtual-backend/mcp';
 import { normalizeTags } from '$lib/utils/tags';
 import { getOpenAIModelsDirect } from './openai';
 
@@ -442,6 +443,14 @@ export const getToolServersData = async (servers: object[]) => {
 				.map(async (server) => {
 					let error = null;
 
+					if (server?.type === 'mcp') {
+						try {
+							return await discoverMcpServer(server);
+						} catch (err: any) {
+							return { error: err?.message ?? String(err), url: server?.url, type: 'mcp' };
+						}
+					}
+
 					let toolServerToken = null;
 
 					const auth_type = server?.auth_type ?? 'bearer';
@@ -549,6 +558,10 @@ export const executeToolServer = async (
 	let error = null;
 
 	try {
+		if ((serverData as any)?.type === 'mcp') {
+			return [await executeMcpTool(serverData, name, params), null];
+		}
+
 		// Find the matching operationId in the OpenAPI spec (only valid HTTP methods)
 		const matchingRoute = Object.entries(serverData.openapi.paths).find(([_, methods]) =>
 			Object.entries(methods as any).some(

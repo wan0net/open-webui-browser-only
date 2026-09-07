@@ -38,6 +38,7 @@ const permissions = {
 		export: true
 	},
 	features: {
+		direct_tool_servers: true,
 		web_search: false,
 		image_generation: false,
 		code_interpreter: false,
@@ -88,7 +89,7 @@ const config = {
 		enable_automations: false,
 		enable_notes: false,
 		enable_context_compaction: false,
-		enable_tool_permissions: false,
+		enable_tool_permissions: true,
 		enable_web_search: false,
 		enable_code_execution: false,
 		enable_code_interpreter: false,
@@ -312,6 +313,7 @@ const beginCompletion = async (payload: any) => {
 						model: payload.model,
 						messages: payload.messages?.length ? payload.messages : providerMessages,
 						stream: payload.stream ?? true,
+						tool_servers: payload.tool_servers ?? [],
 						...(payload.params ?? {})
 					}
 				}

@@ -72,6 +72,7 @@
 	} from '$lib/utils';
 	import { setTextScale } from '$lib/utils/text-scale';
 	import { installVirtualBackend, isVirtualBackend, virtualSocket } from '$lib/virtual-backend';
+	import { runToolCompletion } from '$lib/virtual-backend/tools';
 
 	import NotificationToast from '$lib/components/NotificationToast.svelte';
 	import AppSidebar from '$lib/components/app/AppSidebar.svelte';
@@ -656,11 +657,47 @@
 								form_data['model'] = form_data['model'].replace(`${prefixId}.`, ``);
 							}
 
-							const [res, controller] = await chatCompletion(
-								OPENAI_API_KEY,
-								form_data,
-								OPENAI_API_URL
-							);
+							const selectedToolServers = form_data.tool_servers ?? [];
+							delete form_data.tool_servers;
+							let res;
+							let controller;
+
+							if (selectedToolServers.length > 0) {
+								const completion = await runToolCompletion({
+									formData: form_data,
+									servers: selectedToolServers,
+									complete: async (request) => {
+										const [toolRes] = await chatCompletion(OPENAI_API_KEY, request, OPENAI_API_URL);
+										if (!toolRes?.ok) throw await toolRes.json();
+										return toolRes.json();
+									},
+									execute: (registration, params) =>
+										new Promise((resolve) =>
+											executeTool(
+												{
+													server: { url: registration.server.url },
+													name: registration.name,
+													params
+												},
+												resolve,
+												event.chat_id
+											)
+										),
+									approve: async (registration, params) => {
+										if ($settings?.params?.tool_approval_mode === 'full') return true;
+										return window.confirm(
+											`Allow ${registration.name} on ${registration.server?.info?.title ?? registration.server.url}?\n\n${JSON.stringify(params, null, 2)}`
+										);
+									}
+								});
+								res = new Response(JSON.stringify(completion), {
+									status: 200,
+									headers: { 'Content-Type': 'application/json' }
+								});
+								form_data.stream = false;
+							} else {
+								[res, controller] = await chatCompletion(OPENAI_API_KEY, form_data, OPENAI_API_URL);
+							}
 
 							if (res) {
 								// raise if the response is not ok
@@ -703,7 +740,12 @@
 									await processStream();
 								} else {
 									const data = await res.json();
-									cb(data);
+									if (selectedToolServers.length > 0) {
+										cb({ status: true });
+										$socket?.emit(channel, data);
+									} else {
+										cb(data);
+									}
 								}
 							} else {
 								throw new Error('An error occurred while fetching the completion');

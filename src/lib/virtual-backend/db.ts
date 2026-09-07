@@ -68,12 +68,22 @@ export const putFolder = async (folder: LocalFolder) => (await database).put('fo
 export const deleteFolder = async (id: string) => (await database).delete('folders', id);
 
 const SETTINGS_KEY = 'open-webui-browser-settings';
+const DEFAULT_SETTINGS = { ui: { params: { tool_approval_mode: 'ask' } } };
 
 export const getSettings = () => {
 	try {
-		return JSON.parse(localStorage.getItem(SETTINGS_KEY) ?? '{}');
+		const stored = JSON.parse(localStorage.getItem(SETTINGS_KEY) ?? '{}');
+		return {
+			...DEFAULT_SETTINGS,
+			...stored,
+			ui: {
+				...DEFAULT_SETTINGS.ui,
+				...(stored?.ui ?? {}),
+				params: { ...DEFAULT_SETTINGS.ui.params, ...(stored?.ui?.params ?? {}) }
+			}
+		};
 	} catch {
-		return {};
+		return DEFAULT_SETTINGS;
 	}
 };
 

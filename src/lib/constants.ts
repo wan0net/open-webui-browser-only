@@ -1,5 +1,7 @@
 // import { version } from '../../package.json';
 
+import { base } from '$app/paths';
+
 // LICENSE covers this Open WebUI branding surface, including name, logo,
 // visual, textual, symbolic identifiers, metadata, and surrounding UI.
 // Do not alter, remove, obscure, or replace it except as LICENSE permits:
@@ -7,7 +9,7 @@
 export const APP_NAME = 'Open WebUI';
 
 export const WEBUI_HOSTNAME = '';
-export const WEBUI_BASE_URL = '';
+export const WEBUI_BASE_URL = base;
 export const WEBUI_API_BASE_URL = `${WEBUI_BASE_URL}/api/v1`;
 
 export const OLLAMA_API_BASE_URL = `${WEBUI_BASE_URL}/ollama`;

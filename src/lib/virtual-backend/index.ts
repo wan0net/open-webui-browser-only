@@ -136,6 +136,9 @@ const body = async (request: Request) => {
 	}
 };
 
+const browserPath = (url: URL) =>
+	base && url.pathname.startsWith(`${base}/`) ? url.pathname.slice(base.length) : url.pathname;
+
 const chatSummary = (chat: LocalChat) => ({
 	id: chat.id,
 	title: chat.title,
@@ -326,7 +329,7 @@ const beginCompletion = async (payload: any) => {
 
 const route = async (request: Request): Promise<Response> => {
 	const url = new URL(request.url);
-	const path = url.pathname;
+	const path = browserPath(url);
 	const method = request.method.toUpperCase();
 
 	if (method === 'GET' && path === '/api/config') return json(config);
@@ -552,7 +555,7 @@ export const installVirtualBackend = () => {
 				? new Request(input, init)
 				: new Request(new URL(input.toString(), window.location.href), init);
 		const url = new URL(request.url, window.location.href);
-		if (url.origin === window.location.origin && url.pathname.startsWith('/api/')) {
+		if (url.origin === window.location.origin && browserPath(url).startsWith('/api/')) {
 			return route(request);
 		}
 		return nativeFetch(request);

@@ -10,7 +10,7 @@
 		settings,
 		terminalServers
 	} from '$lib/stores';
-	import { WEBUI_API_BASE_URL } from '$lib/constants';
+	import { WEBUI_API_BASE_URL, WEBUI_BASE_URL } from '$lib/constants';
 	import { getFolders } from '$lib/apis/folders';
 	import { searchKnowledgeBases, searchKnowledgeFiles } from '$lib/apis/knowledge';
 	import { searchFiles } from '$lib/apis/terminal';
@@ -347,7 +347,7 @@
 							// LICENSE covers this Open WebUI fallback logo.
 							// Do not alter, remove, obscure, or replace it except as LICENSE permits:
 							// https://docs.openwebui.com/license.
-							(e.currentTarget as HTMLImageElement).src = '/favicon.png';
+							(e.currentTarget as HTMLImageElement).src = `${WEBUI_BASE_URL}/favicon.png`;
 						}}
 					/>
 					<div class="min-w-0 truncate">

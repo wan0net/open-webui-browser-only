@@ -64,7 +64,7 @@
 									// LICENSE covers this Open WebUI fallback logo.
 									// Do not alter, remove, obscure, or replace it except as LICENSE permits:
 									// https://docs.openwebui.com/license.
-									e.currentTarget.src = '/favicon.png';
+									e.currentTarget.src = `${WEBUI_BASE_URL}/favicon.png`;
 								}}
 							/>
 						</Tooltip>

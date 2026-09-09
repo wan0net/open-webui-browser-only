@@ -122,6 +122,10 @@ function trialApply(requestedTarget, verify) {
 		console.log(`Fetching upstream target ${target}`);
 		run('git', ['fetch', '--no-tags', '--force', manifest.upstream.url, `+${target}:${checkRef}`]);
 		run('git', ['worktree', 'add', '--detach', worktree, checkRef]);
+		run('git', ['config', 'user.name', 'Browser-only compatibility check'], { cwd: worktree });
+		run('git', ['config', 'user.email', 'browser-only-check@users.noreply.github.com'], {
+			cwd: worktree
+		});
 		const patchFiles = readdirSync(patches)
 			.filter((file) => file.endsWith('.patch'))
 			.sort()

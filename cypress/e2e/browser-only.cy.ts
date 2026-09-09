@@ -13,6 +13,7 @@ describe('browser-only boot', () => {
 		});
 		cy.get('#chat-input', { timeout: 30000 }).should('be.visible');
 		cy.location('pathname').should('match', new RegExp(`^${basePath.replaceAll('/', '\\/')}/`));
+		cy.wait(500);
 		cy.then(() =>
 			expect(leakedApiRequests, 'network calls to a real /api backend').to.deep.equal([])
 		);

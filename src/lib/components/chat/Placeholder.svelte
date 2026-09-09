@@ -19,7 +19,7 @@
 	} from '$lib/stores';
 	import { refreshChatList, refreshFolderChatLists } from '$lib/stores/chatList';
 	import { sanitizeResponseContent, extractCurlyBraceWords } from '$lib/utils';
-	import { WEBUI_API_BASE_URL, WEBUI_BASE_URL } from '$lib/constants';
+	import { WEBUI_BASE_URL } from '$lib/constants';
 
 	import Suggestions from './Suggestions.svelte';
 	import Tooltip from '$lib/components/common/Tooltip.svelte';
@@ -143,7 +143,7 @@
 										}}
 									>
 										<img
-											src={`${WEBUI_API_BASE_URL}/models/model/profile/image?id=${model?.id}&lang=${$i18n.language}`}
+											src={`${WEBUI_BASE_URL}/favicon.png`}
 											class=" size-9 @sm:size-10 rounded-2xl"
 											aria-hidden="true"
 											draggable="false"

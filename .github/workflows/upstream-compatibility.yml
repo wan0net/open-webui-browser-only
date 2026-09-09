@@ -1,0 +1,31 @@
+name: Check upstream compatibility
+
+on:
+  schedule:
+    - cron: '23 18 * * 1'
+  workflow_dispatch:
+    inputs:
+      upstream_ref:
+        description: Upstream tag, branch, or commit to test
+        required: false
+        default: latest-stable
+
+permissions:
+  contents: read
+
+jobs:
+  trial-rebase:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Verify patch boundary
+        run: npm run browser-only:boundary
+      - name: Apply and verify on upstream
+        run: npm run browser-only:upstream-check -- "${{ inputs.upstream_ref || 'latest-stable' }}" --verify

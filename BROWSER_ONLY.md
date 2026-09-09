@@ -21,8 +21,9 @@ Use Node.js 22, which is the current upstream-supported build version.
 
 ```sh
 npm ci
-npm run test:frontend -- --run
+npm run test:browser-only:contracts
 npm run build:static
+npm run test:browser-only:smoke
 npm run preview
 ```
 
@@ -76,12 +77,40 @@ Browser-native display features such as Markdown, diagrams, code formatting, loc
 
 ## Updating from upstream
 
-The intended update boundary is small:
+The fork is maintained as a patch stack. [`browser-only-stack.json`](./browser-only-stack.json)
+pins the upstream commit beneath the stack and explicitly lists every upstream file that the
+browser-only layer is allowed to modify. CI fails if that boundary grows without a deliberate
+manifest change.
 
-1. Merge or rebase a new Open WebUI tag into this fork.
-2. Resolve the few intentional frontend integration points: `src/routes/+layout.svelte`, the local-user sign-out guard, static adapter configuration, and package scripts.
-3. Run the unit tests and static build.
-4. In a browser, verify boot, connection save/reload, model discovery, a streaming completion, an approved and declined OpenAPI tool call, an MCP connection/call, chat reload, pin/archive, and folder movement.
-5. Watch the browser log for `[browser backend] unsupported ...`; a new call there identifies the exact virtual endpoint a new upstream version expects.
+Inspect the boundary or export the complete, ordered patch series at any time:
+
+```sh
+npm run browser-only:boundary
+npm run browser-only:export -- /tmp/open-webui-browser-only-patches
+```
+
+Trial-apply the stack to the newest stable upstream tag, then run its adapter contracts, static
+build, and browser boot smoke test in a disposable worktree:
+
+```sh
+npm run browser-only:upstream-check -- latest-stable --verify
+```
+
+A tag, branch, or commit can replace `latest-stable`. The weekly **Check upstream compatibility**
+workflow runs the same operation without modifying this branch. It can also be started manually
+with a chosen upstream ref. A green result means the current patch stack applies and passes the
+automated compatibility suite; it does not update or publish the fork.
+
+To adopt an upstream release:
+
+1. Run the upstream check against the intended release.
+2. Create a branch at that upstream ref and apply the exported patches with `git am --3way`.
+3. Resolve only the intentional integration points and rerun the automated suite.
+4. Update `upstream.baseCommit` in `browser-only-stack.json` to the adopted upstream commit. The
+   browser-only commits must remain after that base.
+5. In a browser, verify connection save/reload, model discovery, a streaming completion, approved
+   and declined tool calls, remote and package MCP, chat reload, pin/archive, and folder movement.
+6. Watch the browser log for `[browser backend] unsupported ...`; a new call there identifies the
+   exact virtual endpoint a new upstream version expects.
 
 Most routine updates should therefore be a small merge plus contract verification. Changes to Open WebUI's boot, chat-completion event format, settings schema, or chat persistence schema are the updates most likely to need adapter work. Major API changes can still require a non-trivial compatibility update, but they stay concentrated under `src/lib/virtual-backend/`.

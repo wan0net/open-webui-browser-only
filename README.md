@@ -14,7 +14,7 @@ Streamable HTTP, and LLMChef-style browser-compatible MCP packages in an isolate
 available with confirmation enabled by default. Backend-only features are deliberately disabled.
 
 See [BROWSER_ONLY.md](./BROWSER_ONLY.md) for supported features, disabled functionality, local
-setup, GitHub Pages deployment, limitations, and the upstream-update process.
+setup, GitHub Pages deployment, limitations, and the reproducible upstream patch/update process.
 
 This project retains Open WebUI's upstream history and licence. It is an experimental community
 fork and is not an official Open WebUI release.

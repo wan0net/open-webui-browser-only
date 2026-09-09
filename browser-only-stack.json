@@ -1,0 +1,49 @@
+{
+	"schemaVersion": 1,
+	"upstream": {
+		"url": "https://github.com/open-webui/open-webui.git",
+		"baseCommit": "0a7c15832fb30b1903753e83f81dc7d27e5b0944",
+		"defaultTarget": "latest-stable"
+	},
+	"allowedModifiedPaths": [
+		"README.md",
+		"package-lock.json",
+		"package.json",
+		"src/app.html",
+		"src/lib/apis/index.ts",
+		"src/lib/components/AddToolServerModal.svelte",
+		"src/lib/components/chat/Chat.svelte",
+		"src/lib/components/chat/ChatPlaceholder.svelte",
+		"src/lib/components/chat/MessageInput/Commands/AtCommands.svelte",
+		"src/lib/components/chat/MessageInput/Commands/Models.svelte",
+		"src/lib/components/chat/Messages/Citations.svelte",
+		"src/lib/components/chat/Messages/UserMessage.svelte",
+		"src/lib/components/chat/ModelSelector/ModelItem.svelte",
+		"src/lib/components/chat/Navbar.svelte",
+		"src/lib/components/chat/Placeholder.svelte",
+		"src/lib/components/chat/Settings/Integrations.svelte",
+		"src/lib/components/chat/Settings/Tools/Connection.svelte",
+		"src/lib/components/chat/SettingsModal.svelte",
+		"src/lib/components/layout/Navbar/Menu.svelte",
+		"src/lib/components/layout/Sidebar.svelte",
+		"src/lib/components/layout/Sidebar/PinnedModelItem.svelte",
+		"src/lib/components/layout/Sidebar/UserMenu.svelte",
+		"src/lib/constants.ts",
+		"src/routes/(app)/+layout.svelte",
+		"src/routes/+layout.svelte",
+		"svelte.config.js"
+	],
+	"allowedModifiedPrefixes": ["src/lib/i18n/locales/"],
+	"allowedAddedPaths": [
+		".github/workflows/deploy-static.yml",
+		".github/workflows/upstream-compatibility.yml",
+		"BROWSER_ONLY.md",
+		"browser-only-stack.json",
+		"cypress.config.ts",
+		"cypress/e2e/browser-only.cy.ts",
+		"scripts/browser-only-smoke.mjs",
+		"scripts/browser-only-stack.mjs",
+		"src/lib/components/BrowserMcpPackageModal.svelte"
+	],
+	"allowedAddedPrefixes": ["src/lib/virtual-backend/"]
+}

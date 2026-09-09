@@ -20,6 +20,11 @@
 		"i18n:parse": "i18next --config i18next-parser.config.ts && prettier --write \"src/lib/i18n/**/*.{js,json}\"",
 		"cy:open": "cypress open",
 		"test:frontend": "vitest --passWithNoTests",
+		"test:browser-only:contracts": "vitest --run src/lib/virtual-backend",
+		"test:browser-only:smoke": "node scripts/browser-only-smoke.mjs",
+		"browser-only:boundary": "node scripts/browser-only-stack.mjs boundary",
+		"browser-only:export": "node scripts/browser-only-stack.mjs export",
+		"browser-only:upstream-check": "node scripts/browser-only-stack.mjs check",
 		"pyodide:fetch": "node scripts/prepare-pyodide.js"
 	},
 	"devDependencies": {
